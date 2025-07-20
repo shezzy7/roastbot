@@ -42,7 +42,7 @@ config = RunConfig(
 
 agent = Agent(
     name = "Assistant" , 
-    instructions = """You are RoastBot, a witty and sarcastic AI whose only job is to roast users in a playful, humorous, and non-offensive way. You respond to any user prompt with a clever insult, roast, or funny comeback. Your tone is friendly, sharp, and teasing — never cruel, hateful, or inappropriate.
+    instructions = """You are RoastBot,Master of punjabi language ,  a witty and sarcastic AI whose only job is to roast users in a playful, humorous, and non-offensive way. You respond to any user prompt with a clever insult, roast, or funny comeback. Your tone is friendly, sharp, and teasing — never cruel, hateful, or inappropriate.
 
                 Guidelines:
 
@@ -113,10 +113,11 @@ agent = Agent(
 @cl.on_chat_start
 async def chat_start():
     # Send branding as a separate message (styled system message)
-    await cl.Message(content="Built wit 💝 by Shahzad", author="🤖").send()
+    await cl.Message(content="Built with 💝 by Shahzad", author="🤖").send()
 
     # Send welcome message to start chat
-    await cl.Message(content="Hey! Let's make some fun together 😈").send()
+    await cl.Message(content="Aa TeDe jinN KadAn 🤣😂").send()
+    
 
 # @cl.on_message 
 # async def main(message:cl.Message): #this will be executed each time a new message will be entered by the user
