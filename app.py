@@ -1,11 +1,13 @@
 # here we are just making a simple agent with the help of OpenAI SDK.We will see how to integrate external llm with sdk.And also will create a chatbot plus its user interface with the help of chainlit.
 
 # first add dependencies using command -> uv add openai-agents
-from agents import Agent , AsyncOpenAI , OpenAIChatCompletionsModel , RunConfig , Runner
+from agents import Agent , AsyncOpenAI , OpenAIChatCompletionsModel , RunConfig , Runner , SQLiteSession
 from openai.types.responses import ResponseTextDeltaEvent
 from dotenv import load_dotenv  , find_dotenv
 import chainlit as cl
 import os
+import uuid
+
 load_dotenv(find_dotenv())
 
 # when we need to connect some extenal model with our sdk agent then for configuring this model we need to do following steps.But if we want to use openai's model then we don't need to do these things.
@@ -42,27 +44,27 @@ agent = Agent(
     name = "Assistant" , 
     instructions = """You are RoastBot, a witty and sarcastic AI whose only job is to roast users in a playful, humorous, and non-offensive way. You respond to any user prompt with a clever insult, roast, or funny comeback. Your tone is friendly, sharp, and teasing — never cruel, hateful, or inappropriate.
 
-Guidelines:
+                    Guidelines:
 
-Be sarcastic, clever, and creative.
-Use easy words not high level 
-Use pop culture, nerdy references, and wordplay if relevant.
-use urdu if user is urdu speaker
+                    Be sarcastic, clever, and creative.
+                    Use easy words not high level 
+                    Use pop culture, nerdy references, and wordplay if relevant.
+                    use urdu if user is urdu speaker
 
-Keep it funny and lighthearted — don’t cross into personal, offensive, or inappropriate territory.
+                    Keep it funny and lighthearted — don’t cross into personal, offensive, or inappropriate territory.
 
-Never apologize. Never compliment.
+                    Never apologize. Never compliment.
 
-Always stay in character as the RoastBot.
+                    Always stay in character as the RoastBot.
 
-Examples:
+                    Examples:
 
-User: "Tell me a joke" → RoastBot: "You asking for jokes? Your haircut is the joke."
+                    User: "Tell me a joke" → RoastBot: "You asking for jokes? Your haircut is the joke."
 
-User: "How smart am I?" → RoastBot: "You're the reason Wi-Fi has a password."
+                    User: "How smart am I?" → RoastBot: "You're the reason Wi-Fi has a password."
 
-User: "What do you think of my coding skills?" → RoastBot: "If bugs were a currency, you'd be a billionaire.""" , 
-    
+                    User: "What do you think of my coding skills?" → RoastBot: "If bugs were a currency, you'd be a billionaire.""" , 
+                        
 )
 
 # response = Runner.run_sync(agent , "What is nashtalogia" , run_config=config)
@@ -74,7 +76,7 @@ User: "What do you think of my coding skills?" → RoastBot: "If bugs were a cur
 # there is decorator in chainlit named on_chat_start we will use it here.As here we want that as a new chat start that it history should be stored so that if we talk about anything discussed previously then he should answe
 @cl.on_chat_start
 async def chat_start(): #this will be executed only once when the new chat will start
-    cl.user_session.set("history" , []) # it will create a empty array named history in user_session(user_session is built in data structure in cl)
+    # cl.user_session.set("history" , []) # it will create a empty array named history in user_session(user_session is built in data structure in cl)
     await cl.Message(content="Hey lets make a fun together").send() #it will print this message at top
 
 # @cl.on_message 
@@ -99,13 +101,14 @@ async def chat_start(): #this will be executed only once when the new chat will 
 #     # we will also add agent's response to history
 #     history.append({'role' : 'assistant' , 'content':result.final_output})
 
-
+session_id = str(uuid.uuid4())
+session = SQLiteSession(session_id)
 @cl.on_message 
 async def main(message: cl.Message):
-    history = cl.user_session.get("history")
-    history.append({'role': "user", 'content': message.content})
+    # history = cl.user_session.get("history")
+    # history.append({'role': "user", 'content': message.content})
 
-    result = Runner.run_streamed(agent, input=history, run_config=config)
+    result = Runner.run_streamed(agent, message.content, run_config=config , session=session)
 
     # Create one message box to stream into
     msg = cl.Message(content="")
@@ -117,4 +120,4 @@ async def main(message: cl.Message):
 
     # Finalize the message bubble and history
     await msg.update()
-    history.append({'role': 'assistant', 'content': result.final_output})
+    # history.append({'role': 'assistant', 'content': result.final_output})
