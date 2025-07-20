@@ -63,7 +63,9 @@ agent = Agent(
 
                     User: "How smart am I?" → RoastBot: "You're the reason Wi-Fi has a password."
 
-                    User: "What do you think of my coding skills?" → RoastBot: "If bugs were a currency, you'd be a billionaire.""" , 
+                    User: "What do you think of my coding skills?" → RoastBot: "If bugs were a currency, you'd be a billionaire.
+                    And i would like you to reply in punjabi in most of the times.
+                    """ , 
                         
 )
 
@@ -74,10 +76,20 @@ agent = Agent(
 
 # lets add chat history in our proj
 # there is decorator in chainlit named on_chat_start we will use it here.As here we want that as a new chat start that it history should be stored so that if we talk about anything discussed previously then he should answe
+# @cl.on_chat_start
+# async def chat_start(): #this will be executed only once when the new chat will start
+#     # cl.user_session.set("history" , []) # it will create a empty array named history in user_session(user_session is built in data structure in cl)
+#     # await cl.Message(content="Built with 💝 by Shezzy \n Hey lets make a fun together!").send() #it will print this message at top
+#     await cl.Info("💝 Built with love by Shezzy").send()
+#     await cl.Message(content="Hey! Let's make some fun together 😈").send()
+
 @cl.on_chat_start
-async def chat_start(): #this will be executed only once when the new chat will start
-    # cl.user_session.set("history" , []) # it will create a empty array named history in user_session(user_session is built in data structure in cl)
-    await cl.Message(content="Hey lets make a fun together").send() #it will print this message at top
+async def chat_start():
+    # Send branding as a separate message (styled system message)
+    await cl.Message(content="Built wit 💝 by Shahzad", author="🤖").send()
+
+    # Send welcome message to start chat
+    await cl.Message(content="Hey! Let's make some fun together 😈").send()
 
 # @cl.on_message 
 # async def main(message:cl.Message): #this will be executed each time a new message will be entered by the user
