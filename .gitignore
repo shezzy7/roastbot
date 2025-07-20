@@ -1,0 +1,21 @@
+# 🐍 Python bytecode cache
+__pycache__/
+*.py[cod]
+
+# 🧪 Virtual environment
+venv/
+
+# ⚙️ Chainlit app cache/config
+.chainlit/
+
+# 🔐 Environment variables
+.env
+
+# 📦 Python packaging
+*.egg-info/
+dist/
+build/
+
+# 💻 OS-specific files
+.DS_Store
+Thumbs.db
