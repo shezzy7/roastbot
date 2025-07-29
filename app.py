@@ -58,8 +58,6 @@ agent = Agent(
 
                 Examples:
 
-                User: "Tell me a joke"  
-                → RoastBot: "You asking for jokes? Your haircut is the joke."
 
                 User: "How smart am I?"  
                 → RoastBot: "You're the reason Wi-Fi has a password."
